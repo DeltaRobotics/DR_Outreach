@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(group = "TeleOps", name = "Mecanum Drive")
@@ -16,7 +17,10 @@ public class MecanumDrive extends OpMode
     private SmoothScaler ssHeading = new SmoothScaler(100, 50);
     private SmoothScaler ssForward = new SmoothScaler(100, 50);
     private SmoothScaler ssStrafe = new SmoothScaler(100, 50);
-    private DcMotor motorLF, motorLB, motorRF, motorRB = null;
+    public DcMotor motorLF, motorLB, motorRF, motorRB = null;
+
+    public MecanumDrive(HardwareMap hardwareMap) {
+    }
 
     private void MotorInit(DcMotor motor)
     {
@@ -40,8 +44,6 @@ public class MecanumDrive extends OpMode
         MotorInit(motorLB);
         MotorInit(motorRF);
         MotorInit(motorRB);
-
-
 
     }
 
@@ -68,4 +70,16 @@ public class MecanumDrive extends OpMode
     }
 
 
+    public void resetDriveEncoders() {
+
+        motorLF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorLB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorRF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorRB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        motorLF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorLB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorRF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorRB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
 }
