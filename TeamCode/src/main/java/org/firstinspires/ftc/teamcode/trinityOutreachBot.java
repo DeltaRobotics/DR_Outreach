@@ -28,10 +28,11 @@ public class trinityOutreachBot extends LinearOpMode
     public Servo rightClaw = null;
     public DcMotor slides = null;
 
+
     @Override
     public void runOpMode() throws InterruptedException
     {
-        MecanumDrive robot = new MecanumDrive(hardwareMap);
+        //MecanumDrive robot = new MecanumDrive(hardwareMap);
 
         leftClaw = hardwareMap.servo.get("leftClaw");
         rightClaw = hardwareMap.servo.get("rightClaw");
