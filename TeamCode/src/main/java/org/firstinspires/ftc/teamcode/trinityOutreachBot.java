@@ -9,10 +9,11 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 @TeleOp(name="trinityOutreachBot")
-//@Disabled
+@Disabled
 
 public class trinityOutreachBot extends LinearOpMode
 {
+    private final double MAX_POWER = 0.5;
     public boolean buttonY = true;
     public boolean buttonX = true;
     public boolean buttonA = true;
@@ -24,6 +25,10 @@ public class trinityOutreachBot extends LinearOpMode
 
     public double speed = .5;
 
+    private SmoothScaler ssHeading = new SmoothScaler(100, 50);
+    private SmoothScaler ssForward = new SmoothScaler(100, 50);
+    private SmoothScaler ssStrafe = new SmoothScaler(100, 50);
+
     public Servo leftClaw = null;
     public Servo rightClaw = null;
     public DcMotor slides = null;
@@ -32,7 +37,7 @@ public class trinityOutreachBot extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
-        //MecanumDrive robot = new MecanumDrive(hardwareMap);
+
 
         leftClaw = hardwareMap.servo.get("leftClaw");
         rightClaw = hardwareMap.servo.get("rightClaw");

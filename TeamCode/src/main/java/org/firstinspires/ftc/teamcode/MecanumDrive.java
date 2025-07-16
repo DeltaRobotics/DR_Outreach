@@ -7,8 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(group = "TeleOps", name = "Mecanum Drive")
-public class MecanumDrive extends OpMode
-{
+public class MecanumDrive extends OpMode {
     private final double MAX_POWER = 0.5;
 
     private boolean firstLoop = true;
@@ -17,27 +16,46 @@ public class MecanumDrive extends OpMode
     public boolean leftTrigger = true;
     public boolean rightTrigger = true;
 
+    public boolean buttonY = true;
+    public boolean buttonX = true;
+    public boolean buttonA = true;
+    public boolean buttonB = true;
+    public boolean buttonDR = true;
+    public boolean buttonDL = true;
+
+    public Servo leftClaw = null;
+    public Servo rightClaw = null;
+    public DcMotor slides = null;
+
     private SmoothScaler ssHeading = new SmoothScaler(100, 50);
     private SmoothScaler ssForward = new SmoothScaler(100, 50);
     private SmoothScaler ssStrafe = new SmoothScaler(100, 50);
     public DcMotor motorLF, motorLB, motorRF, motorRB = null;
-    public Servo leftClaw = null;
-    public Servo rightClaw = null;
-    public DcMotor slides = null;
+
 
     //this is a tele-op not a utility class so you cannot call it in another class
 //    public MecanumDrive(HardwareMap hardwareMap) {
 //    }
 
-    private void MotorInit(DcMotor motor)
-    {
+    private boolean isStarted() {
+        return false;
+    }
+
+    private boolean isStopRequested() {
+        return false;
+    }
+
+    private boolean opModeIsActive() {
+        return false;
+    }
+
+    private void MotorInit(DcMotor motor) {
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motor.setPower(0);
     }
 
     @Override
-    public void init()
-    {
+    public void init() {
         // Init motors
         motorLF = hardwareMap.get(DcMotor.class, "motorLF");
         motorLB = hardwareMap.get(DcMotor.class, "motorLB");
@@ -63,12 +81,12 @@ public class MecanumDrive extends OpMode
 
     //drive code
     @Override
-    public void loop()
-    {
-        if(firstLoop){
+    public void loop() {
+        if (firstLoop) {
             ssForward.elapsedTime.reset();
             ssStrafe.elapsedTime.reset();
             ssHeading.elapsedTime.reset();
+
             // bigger number moves left
             rightClaw.setPosition(.64);
             leftClaw.setPosition(.38);
@@ -79,10 +97,10 @@ public class MecanumDrive extends OpMode
             firstLoop = false;
         }
 
-        mecanumDrive( ssForward.smoothScaler(-gamepad1.left_stick_y), ssStrafe.smoothScaler(gamepad1.left_stick_x), ssHeading.smoothScaler(gamepad1.right_stick_x), MAX_POWER);
+        mecanumDrive(ssForward.smoothScaler(-gamepad1.left_stick_y), ssStrafe.smoothScaler(gamepad1.left_stick_x), ssHeading.smoothScaler(gamepad1.right_stick_x), MAX_POWER);
 
         //claw opening
-        if(gamepad1.right_trigger > 0.1 && rightTrigger){
+        if (gamepad1.right_trigger > 0.1 && rightTrigger) {
 
             rightClaw.setPosition(0.5);
             leftClaw.setPosition(0.5);
@@ -91,15 +109,14 @@ public class MecanumDrive extends OpMode
 
         }
 
-        if(gamepad1.right_trigger < 0.1 && !rightTrigger){
+        if (gamepad1.right_trigger < 0.1 && !rightTrigger) {
 
             rightTrigger = true;
         }
 
 
-
         //claw closing
-        if(gamepad1.left_trigger > 0.1 && leftTrigger){
+        if (gamepad1.left_trigger > 0.1 && leftTrigger) {
 
             rightClaw.setPosition(.64);
             leftClaw.setPosition(.4);
@@ -108,15 +125,13 @@ public class MecanumDrive extends OpMode
 
         }
 
-        if(gamepad1.left_trigger < 0.1 && !leftTrigger){
+        if (gamepad1.left_trigger < 0.1 && !leftTrigger) {
 
             leftTrigger = true;
         }
 
 
-
-
-        if(gamepad1.dpad_down && buttonDD){
+        if (gamepad1.dpad_down && buttonDD) {
 
             slides.setTargetPosition(0);
             slides.setPower(.375);
@@ -126,13 +141,13 @@ public class MecanumDrive extends OpMode
 
         }
 
-        if(!gamepad1.dpad_down && !buttonDD){
+        if (!gamepad1.dpad_down && !buttonDD) {
 
             buttonDD = true;
         }
 
 
-        if(gamepad1.dpad_up && buttonDU){
+        if (gamepad1.dpad_up && buttonDU) {
 
             slides.setTargetPosition(2400);
             slides.setPower(.375);
@@ -142,14 +157,14 @@ public class MecanumDrive extends OpMode
 
         }
 
-        if(!gamepad1.dpad_up && !buttonDU){
+        if (!gamepad1.dpad_up && !buttonDU) {
 
             buttonDU = true;
         }
 
     }
 
-    public void mecanumDrive(double forward, double strafe, double heading, double speed){
+    public void mecanumDrive(double forward, double strafe, double heading, double speed) {
 
         motorRF.setPower((((forward - strafe) * 1) - (heading * 1)) * speed);
         motorRB.setPower((((forward + strafe) * 1) - (heading * 1)) * speed);
