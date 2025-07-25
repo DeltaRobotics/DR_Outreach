@@ -15,11 +15,6 @@ public class SmoothScaler {
 
     private double[] scalerSamples;
 
-    public void resetTime (){
-
-        elapsedTime.reset();
-
-    }
     public SmoothScaler( int sampleRate, int sampleCount){
 
         this.sampleRate = sampleRate;
@@ -36,6 +31,12 @@ public class SmoothScaler {
 
         }
     }
+    public void resetTime (){
+
+        elapsedTime.reset();
+
+    }
+
     public double smoothScaler (double input){
 
         if(elapsedTime.time() >= sampleTimeDelta){

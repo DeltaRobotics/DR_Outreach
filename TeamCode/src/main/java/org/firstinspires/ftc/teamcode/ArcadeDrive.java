@@ -20,8 +20,6 @@ public class ArcadeDrive extends LinearOpMode {
 
     private SmoothScaler leftScaler = new SmoothScaler(100, 50);
     private SmoothScaler rightScaler = new SmoothScaler(100, 50);
-    private final double MAXDRIVEPOWER = 0.5;
-    private final double MAXTURNOWER = 1 - MAXDRIVEPOWER;
     private final double DEADZONE = 0.2;
 
     @Override
@@ -40,6 +38,11 @@ public class ArcadeDrive extends LinearOpMode {
         MotorLF.setDirection(DcMotorSimple.Direction.FORWARD);
         MotorRB.setDirection(DcMotorSimple.Direction.REVERSE);
         MotorRF.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        MotorLB.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        MotorLF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        MotorRB.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        MotorRF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         waitForStart();
 
@@ -62,13 +65,22 @@ public class ArcadeDrive extends LinearOpMode {
 
             }
 
-            //rightpower = rightScaler.smoothScaler(rightpower);
-            //leftpower = leftScaler.smoothScaler(leftpower);
+            rightpower = rightScaler.smoothScaler(rightpower);
+            leftpower = leftScaler.smoothScaler(leftpower);
+
+            telemetry.addData("Left Power (No Saturate):", leftpower);
+            telemetry.addData("Right Power (No Saturate):", rightpower);
+            telemetry.update();
 
             MotorRB.setPower(Saturate (rightpower, -1 , 1));
             MotorLB.setPower(Saturate(leftpower, -1 , 1));
             MotorRF.setPower(Saturate (rightpower, -1 , 1));
-            MotorLB.setPower(Saturate(leftpower, -1 , 1));
+            MotorLF.setPower(Saturate(leftpower, -1 , 1));
+
+            telemetry.addData("MotorRF Power:", MotorRF.getPower());
+            telemetry.addData("MotorRB Power:", MotorRB.getPower());
+            telemetry.addData("MotorLF Power:", MotorLF.getPower());
+            telemetry.addData("MotorLB Power:", MotorLB.getPower());
 
 
         }
