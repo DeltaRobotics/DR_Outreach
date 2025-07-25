@@ -17,6 +17,9 @@ public class ArcadeDrive extends LinearOpMode {
     private DcMotor MotorLB;
     private double leftpower;
     private double rightpower;
+
+    private SmoothScaler leftScaler = new SmoothScaler(100, 50);
+    private SmoothScaler rightScaler = new SmoothScaler(100, 50);
     private final double MAXDRIVEPOWER = 0.5;
     private final double MAXTURNOWER = 1 - MAXDRIVEPOWER;
     private final double DEADZONE = 0.2;
@@ -27,15 +30,22 @@ public class ArcadeDrive extends LinearOpMode {
         MotorLF = hardwareMap.get(DcMotor.class, "MotorLF");
         MotorRB = hardwareMap.get(DcMotor.class, "MotorRB");
         MotorRF = hardwareMap.get(DcMotor.class, "MotorRF");
+
         MotorRB.setPower(0);
         MotorLB.setPower(0);
         MotorRF.setPower(0);
         MotorLB.setPower(0);
+
         MotorLB.setDirection(DcMotorSimple.Direction.FORWARD);
         MotorLF.setDirection(DcMotorSimple.Direction.FORWARD);
         MotorRB.setDirection(DcMotorSimple.Direction.REVERSE);
         MotorRF.setDirection(DcMotorSimple.Direction.REVERSE);
+
         waitForStart();
+
+        rightScaler.resetTime();
+        leftScaler.resetTime();
+
         while (!isStopRequested()) {
             if (gamepad1.left_stick_y >= DEADZONE || gamepad1.left_stick_y <= -DEADZONE) {
                 leftpower = gamepad1.left_stick_y;
@@ -51,6 +61,9 @@ public class ArcadeDrive extends LinearOpMode {
                 leftpower += gamepad1.right_stick_x;
 
             }
+
+            //rightpower = rightScaler.smoothScaler(rightpower);
+            //leftpower = leftScaler.smoothScaler(leftpower);
 
             MotorRB.setPower(Saturate (rightpower, -1 , 1));
             MotorLB.setPower(Saturate(leftpower, -1 , 1));

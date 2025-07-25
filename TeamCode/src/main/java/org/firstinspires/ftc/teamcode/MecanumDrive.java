@@ -83,9 +83,10 @@ public class MecanumDrive extends OpMode {
     @Override
     public void loop() {
         if (firstLoop) {
-            ssForward.elapsedTime.reset();
-            ssStrafe.elapsedTime.reset();
-            ssHeading.elapsedTime.reset();
+
+            ssForward.resetTime();
+            ssStrafe.resetTime();
+            ssHeading.resetTime();
 
             // bigger number moves left
             rightClaw.setPosition(.64);

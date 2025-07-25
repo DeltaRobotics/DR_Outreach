@@ -11,10 +11,15 @@ public class SmoothScaler {
 
     private int sampleIndex;
 
-    public ElapsedTime elapsedTime;
+    private ElapsedTime elapsedTime;
 
     private double[] scalerSamples;
 
+    public void resetTime (){
+
+        elapsedTime.reset();
+
+    }
     public SmoothScaler( int sampleRate, int sampleCount){
 
         this.sampleRate = sampleRate;
